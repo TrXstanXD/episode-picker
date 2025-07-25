@@ -1,6 +1,8 @@
-<html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset="UTF-8">
-  <title>Stranger Things Episode Picker</title>
+  <title>Watch Stranger Things</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -55,7 +57,7 @@
       color: #cccccc;
     }
   </style>
-<style type="text/css" id="operaUserStyle"></style></head>
+</head>
 <body>
   <h1>Stranger Things Episode Picker</h1>
   <div class="controls">
@@ -65,111 +67,70 @@
       <option value="2">2</option>
       <option value="3">3</option>
       <option value="4">4</option>
+      <option value="5">5</option>
     </select>
     <label for="episodeSelect">Episode:</label>
-    <select id="episodeSelect" onchange="updateEpisodeInfo()"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option></select>
+    <select id="episodeSelect" onchange="updateEpisodeInfo()"></select>
     <button id="watchButton" onclick="openInNewTab()">Watch Now</button>
-
   </div>
-  <div class="episode-info" id="episodeInfo"><h2>Season 1, Episode 1</h2><p>This is the description for Season 1, Episode 1 of The O.C.</p></div>
+  <div class="episode-info" id="episodeInfo"></div>
   <script>
-const episodesPerSeason = { "1":8, "2":9, "3":8, "4":9, "5":8 };
-const episodeData = {
-  "1-1": { title: "Chapter One: The Vanishing of Will Byers", description: "Description for S1E1" },
-  "1-2": { title: "Chapter Two: The Weirdo on Maple Street", description: "Description for S1E2" },
-  ...
-  "1-8": { title: "Chapter Eight: The Upside Down", description: "Description for S1E8" },
+    const episodesPerSeason = { "1": 8, "2": 9, "3": 8, "4": 9, "5": 10 };
+    const episodeData = {}; // You can fill this with titles/descriptions if desired
 
-  "2-1": { title: "Chapter One: MADMAX", description: "Description for S2E1" },
-  ...
-  "2-9": { title: "Chapter Nine: The Gate", description: "Description for S2E9" },
-
-  "3-1": { title: "Chapter One: Suzie, Do You Copy?", description: "Description for S3E1" },
-  ...
-  "3-8": { title: "Chapter Eight: The Battle of Starcourt", description: "Description for S3E8" },
-
-  "4-1": { title: "Chapter One: The Hellfire Club", description: "Description for S4E1" },
-  ...
-  "4-9": { title: "Chapter Nine: The Piggyback", description: "Description for S4E9" },
-
-  "5-1": { title: "The Crawl", description: "Not released yet (Season 5)" },
-  "5-2": { title: "The Vanishing Of ___", description: "Not released yet (Season 5)" },
-  ...
-  "5-8": { title: "The Rightside Up", description: "Not released yet (Season 5)" }
-};
-
-
-
-function updateEpisodes() {
-  const season = document.getElementById("seasonSelect").value;
-  const episodeSelect = document.getElementById("episodeSelect");
-  episodeSelect.innerHTML = "";
-  const count = episodesPerSeason[season];
-  for (let i = 1; i <= count; i++) {
-    const option = document.createElement("option");
-    option.value = i;
-
-    const watchedKey = `watched-${season}-${i}`;
-    const isWatched = localStorage.getItem(watchedKey) === "true";
-    option.textContent = isWatched ? `✅ ${i}` : `${i}`;
-
-    episodeSelect.appendChild(option);
-  }
-  updateEpisodeInfo();
-}
-
-
-function updateEpisodeInfo() {
-  const season = document.getElementById("seasonSelect").value;
-  const episode = document.getElementById("episodeSelect").value;
-  const key = `${season}-${episode}`;
-  const info = episodeData[key];
-  const container = document.getElementById("episodeInfo");
-  const watchButton = document.getElementById("watchButton");
-
-  // 🔽 Add this block right here:
-  if (season === "5") {
-    watchButton.disabled = true;
-    container.innerHTML = `<h2>${info.title}</h2><p><em>${info.description}</em></p><p style="color: #ccc;"><strong>This episode is not released yet.</strong></p>`;
-    return; // prevent continuing to normal rendering
-  }
-
-  // ✅ Normal rendering for released episodes
-  if (info) {
-    container.innerHTML = `<h2>${info.title}</h2><p>${info.description}</p>`;
-    watchButton.disabled = false;
-
-    const watchedKey = `watched-${season}-${episode}`;
-    const isWatched = localStorage.getItem(watchedKey) === "true";
-    if (isWatched) {
-      container.innerHTML += `<p style="color: #00ff99;"><strong>✔ You’ve watched this episode</strong></p>`;
+    function updateEpisodes() {
+      const season = document.getElementById("seasonSelect").value;
+      const episodeSelect = document.getElementById("episodeSelect");
+      episodeSelect.innerHTML = "";
+      const count = episodesPerSeason[season];
+      for (let i = 1; i <= count; i++) {
+        const option = document.createElement("option");
+        option.value = i;
+        const watchedKey = `watched-${season}-${i}`;
+        const isWatched = localStorage.getItem(watchedKey) === "true";
+        option.textContent = isWatched ? `✅ ${i}` : `${i}`;
+        episodeSelect.appendChild(option);
+      }
+      updateEpisodeInfo();
     }
-  } else {
-    container.innerHTML = `<h2>Season ${season} – Episode ${episode}</h2><p>No description available yet.</p>`;
-    watchButton.disabled = false;
-  }
-}
 
+    function updateEpisodeInfo() {
+      const season = document.getElementById("seasonSelect").value;
+      const episode = document.getElementById("episodeSelect").value;
+      const key = `${season}-${episode}`;
+      const container = document.getElementById("episodeInfo");
+      const watchButton = document.getElementById("watchButton");
 
+      if (season === "5" && episode === "10") {
+        container.innerHTML = `<h2>Not released yet</h2><p>Not released yet sorry!</p>`;
+        watchButton.disabled = true;
+        return;
+      } else {
+        watchButton.disabled = false;
+      }
+
+      const watchedKey = `watched-${season}-${episode}`;
+      const isWatched = localStorage.getItem(watchedKey) === "true";
+      container.innerHTML = `<h2>Season ${season}, Episode ${episode}</h2><p>No description available yet.</p>`;
+      if (isWatched) {
+        container.innerHTML += `<p style="color: #00ff99;"><strong>✔ You’ve watched this episode</strong></p>`;
+      }
+    }
 
     function openInNewTab() {
-  const season = document.getElementById("seasonSelect").value;
-  const episode = document.getElementById("episodeSelect").value;
-  const key = `watched-${season}-${episode}`;
-  localStorage.setItem(key, "true");
+      const season = document.getElementById("seasonSelect").value;
+      const episode = document.getElementById("episodeSelect").value;
+      const key = `watched-${season}-${episode}`;
+      localStorage.setItem(key, "true");
+      const url = `https://multiembed.mov/directstream.php?video_id=tt4574334&s=${season}&e=${episode}`;
+      window.open(url, '_blank');
+      updateEpisodeInfo();
+    }
 
-  const url = `https://multiembed.mov/directstream.php?video_id=tt4574334&s=${season}&e=${episode}`;
-  window.open(url, '_blank');
-
-  updateEpisodeInfo(); // refresh UI
-}
-
-
-window.onload = () => {
-  updateEpisodes();
-  updateEpisodeInfo();
-};
-
+    window.onload = () => {
+      updateEpisodes();
+      updateEpisodeInfo();
+    };
   </script>
-
-</body></html>
+</body>
+</html>
