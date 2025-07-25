@@ -94,28 +94,36 @@
       updateEpisodeInfo();
     }
 
-    function updateEpisodeInfo() {
-      const season = document.getElementById("seasonSelect").value;
-      const episode = document.getElementById("episodeSelect").value;
-      const key = `${season}-${episode}`;
-      const container = document.getElementById("episodeInfo");
-      const watchButton = document.getElementById("watchButton");
+function updateEpisodeInfo() {
+  const season = document.getElementById("seasonSelect").value;
+  const episode = document.getElementById("episodeSelect").value;
+  const key = `${season}-${episode}`;
+  const info = episodeData[key];
+  const container = document.getElementById("episodeInfo");
+  const watchButton = document.getElementById("watchButton");
 
-      if (season === "5" && episode === "10") {
-        container.innerHTML = `<h2>Not released yet</h2><p>Not released yet sorry!</p>`;
-        watchButton.disabled = true;
-        return;
-      } else {
-        watchButton.disabled = false;
-      }
+  // Disable watch button for Season 5, Episodes 9 and 10
+  if (season === "5" && (episode === "9" || episode === "10")) {
+    watchButton.disabled = true;
+    container.innerHTML = `<h2>Season ${season}, Episode ${episode}</h2><p>Not released yet, sorry!</p>`;
+    return;
+  }
 
-      const watchedKey = `watched-${season}-${episode}`;
-      const isWatched = localStorage.getItem(watchedKey) === "true";
-      container.innerHTML = `<h2>Season ${season}, Episode ${episode}</h2><p>No description available yet.</p>`;
-      if (isWatched) {
-        container.innerHTML += `<p style="color: #00ff99;"><strong>✔ You’ve watched this episode</strong></p>`;
-      }
+  if (info) {
+    container.innerHTML = `<h2>${info.title}</h2><p>${info.description}</p>`;
+    watchButton.disabled = false;
+
+    const watchedKey = `watched-${season}-${episode}`;
+    const isWatched = localStorage.getItem(watchedKey) === "true";
+    if (isWatched) {
+      container.innerHTML += `<p style="color: #00ff99;"><strong>✔ You’ve watched this episode</strong></p>`;
     }
+  } else {
+    container.innerHTML = `<h2>Season ${season} – Episode ${episode}</h2><p>No description available yet.</p>`;
+    watchButton.disabled = false;
+  }
+}
+
 
     function openInNewTab() {
       const season = document.getElementById("seasonSelect").value;
